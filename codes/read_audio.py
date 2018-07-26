@@ -10,17 +10,15 @@ expected_path = "F:/WorkSpace/Djent_Learning/codes/data/train/expected/"
 # read input file
 def read_file(path, i):
     input_filepath = path
-    input_filename = None
+    input_filename = ""
+
+    # choose file name
     if path == input_path:
         input_filename = "clean_" + str(i) + ".wav"
     else:
         input_filename = "tokyo_drive_" + str(i) + ".wav"
     input_file = wave.open(input_filepath + input_filename, 'rb')
     num_frame = input_file.getnframes()  # get the number of frames
-
-    # count frames number if it is clean audio
-    global frames
-    frames = num_frame
     num_channel = input_file.getnchannels()  # get the number of channels
     frame_rate = input_file.getframerate()  # get the rate of frames
     num_sample_width = input_file.getsampwidth()  # get the width of sample

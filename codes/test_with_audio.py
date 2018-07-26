@@ -8,5 +8,5 @@ import scipy.io as sio
 import numpy as np
 import os
 
-model_path = "F:/WorkSpace/DL_Sound_Effect/codes/data/model/model.h5"
+model_path = "F:/WorkSpace/Djent_Learning/codes/data/model/model.h5"
 model = load_model(model_path)

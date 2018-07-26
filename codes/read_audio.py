@@ -2,9 +2,9 @@ import wave
 import numpy as np
 
 dim = 0
-input_path = "F:/WorkSpace/DL_Sound_Effect/codes/data/train/input/"
-output_path = "F:/WorkSpace/DL_Sound_Effect/codes/data/train/output/"
-expected_path = "F:/WorkSpace/DL_Sound_Effect/codes/data/train/expected/"
+input_path = "F:/WorkSpace/Djent_Learning/codes/data/train/input/"
+output_path = "F:/WorkSpace/Djent_Learning/codes/data/train/output/"
+expected_path = "F:/WorkSpace/Djent_Learning/codes/data/train/expected/"
 
 
 # read input file

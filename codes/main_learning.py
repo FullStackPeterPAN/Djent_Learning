@@ -6,9 +6,12 @@ from keras.layers import Dense
 import numpy as np
 import os
 
+filepath = "F:/WorkSpace/DL_Sound_Effect/codes/data/train/"
+
+
 # read input file
-def read_file():
-    input_filepath = "./F:/WorkSpace/DL_Sound_Effect/codes/data/train/input/"
+def read_file(path):
+    input_filepath = path + "input/"
     input_filenames = os.listdir(input_filepath)
     for input_filename in input_filenames:
         input_file = wave.open(input_filepath+input_filename, 'rb')
@@ -23,4 +26,7 @@ def read_file():
         wave_data = wave_data.T  # turn the
         wave_data = wave_data
         return wave_data, frame_rate
-    
+
+
+print(read_file(filepath))
+

@@ -1,14 +1,12 @@
-# import necessary stuff
-from keras.models import Sequential
+import wave
+
 from keras.layers.core import Dense, Dropout, Activation
 import scipy.io as sio
 import numpy as np
-
-# a sequential model for testing
-model = Sequential()
+import os
 
 
-def learning_model(input_data, expected_data, dim):
+def learning_model(model, input_data, expected_data, dim):
     model.add(Dense(1, input_dim=dim, activation='relu'))
     model.add(Dense(dim, activation='sigmoid'))
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])   # compile the model

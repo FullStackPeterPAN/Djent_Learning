@@ -2,15 +2,14 @@ import wave
 import numpy as np
 
 dim = 0
-input_path = "F:/WorkSpace/Djent_Learning/codes/data/train/input/"
-output_path = "F:/WorkSpace/Djent_Learning/codes/data/train/output/"
-expected_path = "F:/WorkSpace/Djent_Learning/codes/data/train/expected/"
+input_path = "data/train/input/"
+output_path = "data/train/output/"
+expected_path = "data/train/expected/"
 
 
 # read input file
 def read_file(path, i):
     input_filepath = path
-    input_filename = ""
 
     # choose file name
     if path == input_path:

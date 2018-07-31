@@ -31,8 +31,7 @@ def read_file(path, i):
     num_sample_width = input_file.getsampwidth()  # get the width of sample
 
     str_data = input_file.readframes(num_frame)  # read all frames
-    print(num_sample_width)
-    print(len(str_data))
+
     input_file.close()  # close the file
     wave_data = np.fromstring(str_data, dtype=np.int16)  # turn the data to numpy array
     wave_data.shape = -1, num_channel  # shape the data depending on the number of channels
@@ -44,16 +43,10 @@ def read_file(path, i):
     plt.ylabel("Amplitude")
     plt.title("show wave")
     plt.grid('on')
-    plt.show()
-
-    wave_data = wave_data.T  # turn the wave data
-    wave_data = wave_data
+    plt.show(block=False)
 
     global dim
     dim = len(wave_data[0])
-
-    # reshape the data
-    wave_data = wave_data.reshape(dim, num_channel)
     return wave_data  # return numpy data
 
 

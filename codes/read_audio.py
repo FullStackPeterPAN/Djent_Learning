@@ -21,6 +21,7 @@ def read_file(path, i):
 
     input_file = wave.open(input_filepath + input_filename, 'rb')
 
+    global num_frame
     num_frame = input_file.getnframes()  # get the number of frames
     num_channel = input_file.getnchannels()  # get the number of channels
 
@@ -43,20 +44,16 @@ def read_file(path, i):
     plt.ylabel("Amplitude")
     plt.title("show wave")
     plt.grid('on')
-    plt.show(block=False)
+    plt.show()
 
-    global dim
-    dim = len(wave_data[0])
     return wave_data  # return numpy data
-
-
-def get_dim():
-    return dim
 
 
 def get_frame_rate():
     return frame_rate
 
+def get_num_frame():
+    return num_frame
 
 def get_sample_width():
     return num_sample_width

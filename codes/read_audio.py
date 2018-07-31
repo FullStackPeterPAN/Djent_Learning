@@ -28,16 +28,14 @@ def read_file(path, i):
     input_file.close()  # close the file
     wave_data = np.fromstring(str_data, dtype=np.short)  # turn the data to numpy array
 
-    # plot the wave
-    time = np.arange(0, num_frame) * (1.0 / frame_rate)
-    plt.plot(time, wave_data)
-    plt.xlabel("Time(s)")
-    plt.ylabel("Amplitude")
-    plt.title("Single channel wavedata")
-    plt.grid('on')  # 标尺，on：有，off:无。
-
     wave_data.shape = -1, num_channel  # shape the data depending on the number of channels
     wave_data = wave_data.T  # turn the wave data
+    wave_data = wave_data
+
+    # plot the wave
+    time = np.arange(0, len(wave_data)) * (1.0 / frame_rate)
+    plt.plot(time, wave_data)
+    plt.show()
 
     global dim
     dim = len(wave_data[0])
@@ -55,5 +53,7 @@ def get_dim():
 def get_frame_rate():
     return frame_rate
 
+
 def get_sample_width():
     return num_sample_width
+

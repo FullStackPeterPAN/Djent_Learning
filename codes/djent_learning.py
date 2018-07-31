@@ -7,7 +7,7 @@ import os
 
 
 def learning_model(model, input_data, expected_data):
-    model.add(Dense(10, input_dim=1, activation='relu'))
+    model.add(Dense(128, input_dim=1, activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
 
     # compile the model
@@ -16,8 +16,10 @@ def learning_model(model, input_data, expected_data):
     train_in = input_data
     train_out = expected_data
 
+    print(train_in)
+    print(train_out)
     # train the model
-    model.fit(train_in, train_out, epochs=10, batch_size=1024)
+    model.fit(train_in, train_out, epochs=1, batch_size=128)
 
     # save the model
     model.save("data/model/model.h5")

@@ -1,14 +1,13 @@
 import wave
-import struct
 import numpy as np
-np.set_printoptions(suppress=False)
 import matplotlib.pyplot as plt
 
-dim = 0
 input_path = "data/train/input/"
 output_path = "data/train/output/"
 expected_path = "data/train/expected/"
-
+num_frame = None
+frame_rate = None
+num_sample_width = None
 
 # read input file
 def read_file(path, i):
@@ -25,19 +24,13 @@ def read_file(path, i):
     global num_frame
     num_frame = input_file.getnframes()  # get the number of frames
     num_channel = input_file.getnchannels()  # get the number of channels
-
     global frame_rate
     frame_rate = input_file.getframerate()  # get the rate of frames
-
     global num_sample_width
     num_sample_width = input_file.getsampwidth()  # get the width of sample
-
     str_data = input_file.readframes(num_frame)  # read all frames
-
     input_file.close()  # close the file
     wave_data = np.fromstring(str_data, np.int16)  # turn the data to numpy array
-    print(wave_data)
-    np.savetxt("wave_data", wave_data)
 
     # plot the wave
     time = np.arange(0, num_frame) * (1.0 / frame_rate)

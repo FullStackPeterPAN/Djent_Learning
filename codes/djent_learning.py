@@ -1,15 +1,10 @@
-import wave
-from keras.utils import to_categorical
-from keras.layers.core import Dense, Dropout, Activation
-import scipy.io as sio
-import numpy as np
-import os
+from keras.layers.core import Dense
 
 
 def learning_model(model, input_data, expected_data):
-    model.add(Dense(128, input_dim=1, activation='relu'))
-    model.add(Dense(64, activation='relu'))
-    model.add(Dense(64, activation='relu'))
+    model.add(Dense(64, input_dim=1, activation='relu'))
+    model.add(Dense(16, activation='sigmoid'))
+    model.add(Dense(16, activation='sigmoid'))
     model.add(Dense(1, activation='relu'))
 
     # compile the model

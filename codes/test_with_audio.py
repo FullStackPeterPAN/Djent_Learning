@@ -4,7 +4,7 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_path = "data/test/input/"
+input_path = "data/train/input/"
 read_test_in = read_audio
 test_in = read_test_in.read_file(input_path, 0)
 

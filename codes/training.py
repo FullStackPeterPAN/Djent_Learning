@@ -1,25 +1,22 @@
-from keras.models import Sequential
+from keras.models import load_model
 from codes import read_audio
 from codes import djent_learning
 
 input_path = "data/train/input/"
-output_path = "data/train/output/"
 expected_path = "data/train/expected/"
 
 # initialize
 dl = djent_learning
-read_test_in = read_audio
-read_test_out = read_audio
-
+read_train_in = read_audio
+read_train_out = read_audio
 
 # read file
-test_in = read_test_in.read_file(input_path, 0)
-test_out = read_test_out.read_file(expected_path, 0)
+train_in = read_train_in.read_file(input_path, 0)
+train_out = read_train_out.read_file(expected_path, 0)
 
-print(test_in)
-print(test_out)
-# activate a new model
-model = Sequential()
+# load a model
+model_path = "data/model/model.h5"
+model = load_model(model_path)
 
 # run the model to evaluate and predict
-dl.learning_model(model, test_in, test_out)
+dl.learning_model(model, train_in, train_out)

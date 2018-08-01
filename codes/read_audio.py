@@ -1,6 +1,7 @@
 import wave
 import struct
 import numpy as np
+np.set_printoptions(suppress=False)
 import matplotlib.pyplot as plt
 
 dim = 0
@@ -34,8 +35,9 @@ def read_file(path, i):
     str_data = input_file.readframes(num_frame)  # read all frames
 
     input_file.close()  # close the file
-    wave_data = np.fromstring(str_data, dtype=np.int16)  # turn the data to numpy array
-    wave_data.shape = -1, num_channel  # shape the data depending on the number of channels
+    wave_data = np.fromstring(str_data, np.int16)  # turn the data to numpy array
+    print(wave_data)
+    np.savetxt("wave_data", wave_data)
 
     # plot the wave
     time = np.arange(0, num_frame) * (1.0 / frame_rate)
@@ -52,8 +54,10 @@ def read_file(path, i):
 def get_frame_rate():
     return frame_rate
 
+
 def get_num_frame():
     return num_frame
+
 
 def get_sample_width():
     return num_sample_width

@@ -4,13 +4,17 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_path = "data/train/input/"
-read_test_in = read_audio
-test_in = read_test_in.read_file(input_path, 0)
+input_path = "data/train/input/clean_0.wav"
 
+# get input numpy array
+read_test_in = read_audio
+test_in = read_test_in.read_file(input_path)
+
+# load the model
 model_path = "data/model/model.h5"
 model = load_model(model_path)
 
+# predict the output
 test_out = model.predict(test_in)
 
 # open a wave file to be written
@@ -20,6 +24,7 @@ f = wave.open(r"test_out.wav", "wb")
 f.setnchannels(1)
 f.setsampwidth(read_test_in.get_sample_width())
 f.setframerate(read_test_in.get_frame_rate())
+
 # write file
 f.writeframes(test_out.tostring())
 

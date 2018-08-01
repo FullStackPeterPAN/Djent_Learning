@@ -17,7 +17,7 @@ def learning_model(model, input_data, expected_data):
     print(train_out)
 
     # train the model
-    model.fit(train_in, train_out, epochs=100, batch_size=1000)
+    model.fit(train_in, train_out, epochs=100, batch_size=10000)
 
     # save the model
     model.save("data/model/model.h5")

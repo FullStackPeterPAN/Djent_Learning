@@ -2,24 +2,14 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_path = "data/train/input/"
-output_path = "data/train/output/"
-expected_path = "data/train/expected/"
 num_frame = None
 frame_rate = None
 num_sample_width = None
 
+
 # read input file
-def read_file(path, i):
-    input_filepath = path
-
-    # choose file name
-    if path == input_path:
-        input_filename = "clean_" + str(i) + ".wav"
-    else:
-        input_filename = "tokyo_drive_" + str(i) + ".wav"
-
-    input_file = wave.open(input_filepath + input_filename, 'rb')
+def read_file(path):
+    input_file = wave.open(path, 'rb')
 
     global num_frame
     num_frame = input_file.getnframes()  # get the number of frames

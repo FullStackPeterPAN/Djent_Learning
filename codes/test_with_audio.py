@@ -28,7 +28,7 @@ for file in os.listdir(input_path):
         f = wave.open(r"data/test/output/test_out_" + name_num, "wb")
 
         # set channel, sample width, frame rate
-        f.setnchannels(1)
+        f.setnchannels(read_test_in.get_num_channel())
         f.setsampwidth(read_test_in.get_sample_width())
         f.setframerate(read_test_in.get_frame_rate())
 
@@ -37,12 +37,15 @@ for file in os.listdir(input_path):
 
         # plot the wave
         time = np.arange(0, read_test_in.get_num_frame()) * (1.0 / read_test_in.get_frame_rate())
-        plt.plot(time, test_out)
-        plt.xlabel("Time(s)")
-        plt.ylabel("Amplitude")
-        plt.title("show wave")
-        plt.grid('on')
-        plt.show()
+        plt.figure()
+        for i in range(0, read_test_in.get_num_channel()):
+            plt.subplot(read_test_in.get_num_channel(), 1, i + 1)
+            plt.plot(time, test_out[:, i])
+            plt.xlabel("Time(s)")
+            plt.ylabel("Amplitude")
+            plt.title("show wave")
+            plt.grid('on')
+            plt.show()
 
         f.close()
 

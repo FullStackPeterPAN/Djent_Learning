@@ -23,7 +23,7 @@ for file in os.listdir(input_path):
         train_out = read_train_out.read_file(expected_path + name_num)
 
         # run the model to evaluate and predict
-        dl.learning_model(model, train_in, train_out)
+        dl.learning_model(model, train_in, train_out, read_train_in.get_num_channel())
 
     # catch errors
     except IOError as exc:

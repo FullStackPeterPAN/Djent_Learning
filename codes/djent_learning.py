@@ -1,8 +1,8 @@
 from keras.layers.core import Dense, Activation, Dropout
 
 
-def learning_model(model, input_data, expected_data):
-    model.add(Dense(256, input_shape=(1,)))
+def learning_model(model, input_data, expected_data, num_channel):
+    model.add(Dense(256, input_shape=(num_channel,)))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
 
@@ -10,7 +10,7 @@ def learning_model(model, input_data, expected_data):
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
 
-    model.add(Dense(1))
+    model.add(Dense(num_channel))
     model.add(Activation('softmax'))
 
     # compile the model
@@ -23,7 +23,7 @@ def learning_model(model, input_data, expected_data):
     print(train_out)
 
     # train the model
-    model.fit(train_in, train_out, epochs=100, batch_size=1000)
+    model.fit(train_in, train_out, epochs=5, batch_size=10000)
 
     # save the model
     model.save("data/model/model.h5")

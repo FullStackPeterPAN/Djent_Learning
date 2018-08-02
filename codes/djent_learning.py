@@ -1,11 +1,17 @@
-from keras.layers.core import Dense
+from keras.layers.core import Dense, Activation, Dropout
 
 
 def learning_model(model, input_data, expected_data):
-    model.add(Dense(output_dim=100, input_dim=1, activation="relu"))
-    model.add(Dense(output_dim=200, activation="relu"))
-    model.add(Dense(output_dim=200, activation="relu"))
-    model.add(Dense(output_dim=1, activation="softmax"))
+    model.add(Dense(256, input_shape=(1,)))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+
+    model.add(Dense(256))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+
+    model.add(Dense(1))
+    model.add(Activation('softmax'))
 
     # compile the model
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])

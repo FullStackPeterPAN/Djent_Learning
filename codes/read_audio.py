@@ -2,6 +2,7 @@ import wave
 import numpy as np
 
 num_frame = None
+num_channel = None
 frame_rate = None
 num_sample_width = None
 
@@ -12,7 +13,7 @@ def read_file(path):
     global num_frame
     num_frame = input_file.getnframes()  # get the number of frames
     global num_channel
-    num_channel = input_file.getnchannels() # get the number of channels
+    num_channel = input_file.getnchannels()  # get the number of channels
     global frame_rate
     frame_rate = input_file.getframerate()  # get the rate of frames
     global num_sample_width
@@ -20,7 +21,7 @@ def read_file(path):
     str_data = input_file.readframes(num_frame)  # read all frames
     input_file.close()  # close the file
     wave_data = np.fromstring(str_data, np.int16)  # turn the data to numpy array
-    waveData = np.reshape(wave_data, [num_frame, num_channel])
+    wave_data = np.reshape(wave_data, [num_frame, num_channel])
     return wave_data  # return numpy data
 
 

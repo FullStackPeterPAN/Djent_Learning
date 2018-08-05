@@ -16,6 +16,7 @@ for file in os.listdir(input_path):
         # get input numpy array
         read_test_in = read_audio
         test_in = read_test_in.read_file(input_path + file)
+        test_in = test_in.reshape(read_test_in.get_num_frame(), 1, 1)
 
         # load the model
         model_path = "data/model/model.h5"
@@ -23,7 +24,7 @@ for file in os.listdir(input_path):
 
         # predict the output
         test_out = model.predict(test_in)
-
+        print(test_out.tostring())
         # open a wave file to be written
         f = wave.open(r"data/test/output/test_out_" + name_num, "wb")
 

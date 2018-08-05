@@ -12,11 +12,11 @@ model = Sequential()
 
 model.add(Dense(256, input_shape=(1,)))  # input shape needs to be changed to 2 if using stereo audio
 model.add(Activation('relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.2))
 
 model.add(Dense(256))
 model.add(Activation('relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.2))
 
 model.add(Dense(1))  # dense needs to be changed to 2 if using stereo audio
 model.add(Activation('softmax'))
@@ -26,6 +26,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 for file in os.listdir(input_path):
     try:
+        # get the last number from file name
         name_num = file.split("_")[-1]
 
         # initialize
@@ -37,7 +38,7 @@ for file in os.listdir(input_path):
         train_out = read_train_out.read_file(expected_path + name_num)
 
         # train the model
-        model.fit(train_in, train_out, epochs=5, batch_size=10000)
+        model.fit(train_in, train_out, epochs=2, batch_size=100000)
 
         # evaluate the model
         loss, accuracy = model.evaluate(train_in, train_out)

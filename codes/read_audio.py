@@ -6,7 +6,6 @@ num_channel = None
 frame_rate = None
 num_sample_width = None
 
-np.set_printoptions(suppress=True)
 
 # read input file
 def read_file(path):

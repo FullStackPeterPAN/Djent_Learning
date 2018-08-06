@@ -1,9 +1,7 @@
 # Djent_Learning
 
+
 University of Glasgow Master Project: Machine learning approaches to sound effect synthesis
-
-
-Djent Learning
 
 	The way to use:
 		1. Put the related clean guitar audio files and drive audio files in directories "codes/data/train/input" and "codes/data/train/input"

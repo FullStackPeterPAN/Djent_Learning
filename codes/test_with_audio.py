@@ -1,6 +1,7 @@
 from keras.models import load_model
 from codes import read_audio
 import wave
+import struct
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -16,6 +17,7 @@ for file in os.listdir(input_path):
         # get input numpy array
         read_test_in = read_audio
         test_in = read_test_in.read_file(input_path + file)
+        test_in = test_in.reshape(read_test_in.get_num_frame(), 1, 1)
 
         # load the model
         model_path = "data/model/model.h5"
@@ -23,18 +25,21 @@ for file in os.listdir(input_path):
 
         # predict the output
         test_out = model.predict(test_in)
-        print(len(test_in))
-        print(len(test_out))
+        test_out = np.reshape(test_out, [read_test_in.get_num_frame(), read_test_in.get_num_channel()])
+
         # open a wave file to be written
-        f = wave.open(r"data/test/output/test_out_" + name_num, "wb")
+        f = wave.open("data/test/output/test_out_" + name_num, "wb")
 
         # set channel, sample width, frame rate
         f.setnchannels(read_test_in.get_num_channel())
         f.setsampwidth(read_test_in.get_sample_width())
         f.setframerate(read_test_in.get_frame_rate())
+        f.setnframes(read_test_in.get_num_frame())
 
         # write file
-        f.writeframes(test_out.tostring())
+        for d in test_out:
+            f.writeframes(struct.pack('h', int(d * 64000 / 2)))  # for 16 bit
+        f.close()
 
         # plot the wave
         time = np.arange(0, read_test_in.get_num_frame()) * (1.0 / read_test_in.get_frame_rate())
@@ -47,8 +52,6 @@ for file in os.listdir(input_path):
             plt.title("show wave")
             plt.grid('on')
             plt.show()
-
-        f.close()
 
     # catch errors
     except IOError as exc:

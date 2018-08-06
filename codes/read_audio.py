@@ -21,7 +21,6 @@ def read_file(path):
     str_data = input_file.readframes(num_frame)  # read all frames
     input_file.close()  # close the file
     wave_data = np.fromstring(str_data, np.int16)  # turn the data to numpy array
-    wave_data = np.reshape(wave_data, [num_frame, num_channel])
     return wave_data  # return numpy data
 
 

@@ -27,7 +27,7 @@ for file in os.listdir(input_path):
         test_out = model.predict(test_in)
         print(test_out)
         # open a wave file to be written
-        f = wave.open("data/test/output/test_out_" + name_num, "wb")
+        f = wave.open(r"data/test/output/test_out_" + name_num, "wb")
 
         # set channel, sample width, frame rate, frame
         f.setnchannels(read_test_in.get_num_channel())

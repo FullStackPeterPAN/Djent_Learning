@@ -59,7 +59,7 @@ for file in os.listdir(input_path):
             raise
 
 # train the model
-model.fit(train_in, train_out, epochs=1, batch_size=200000)
+model.fit(train_in, train_out, epochs=1, batch_size=200000)  # test with only 1 epoch
 
 # evaluate the model
 loss, accuracy = model.evaluate(train_in, train_out)

@@ -27,7 +27,7 @@ model.add(Dense(1, activation='softmax'))
 # compile the model
 model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
-# training arrays
+# create empty training arrays
 train_in = np.empty([1, 1, 1])
 train_out= np.empty([1])
 
@@ -59,7 +59,7 @@ for file in os.listdir(input_path):
             raise
 
 # train the model
-model.fit(train_in, train_out, epochs=5, batch_size=200000)
+model.fit(train_in, train_out, epochs=1, batch_size=200000)
 
 # evaluate the model
 loss, accuracy = model.evaluate(train_in, train_out)

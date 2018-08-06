@@ -25,12 +25,11 @@ for file in os.listdir(input_path):
 
         # predict the output
         test_out = model.predict(test_in)
-        test_out = np.reshape(test_out, [read_test_in.get_num_frame(), read_test_in.get_num_channel()])
-
+        print(test_out)
         # open a wave file to be written
         f = wave.open("data/test/output/test_out_" + name_num, "wb")
 
-        # set channel, sample width, frame rate
+        # set channel, sample width, frame rate, frame
         f.setnchannels(read_test_in.get_num_channel())
         f.setsampwidth(read_test_in.get_sample_width())
         f.setframerate(read_test_in.get_frame_rate())

@@ -15,7 +15,7 @@ model_path = "data/model/model.h5"
 model = Sequential()
 
 # input shape needs to be changed to 2 if using stereo audio
-model.add(LeakyReLU(alpha=0.01, input_shape=(1, 2)))
+model.add(LeakyReLU(alpha=0.01, input_shape=(1, 3)))
 model.add(LSTM(64, return_sequences=True, activation='relu'))
 model.add(Dropout(0.5))
 model.add(LSTM(128, return_sequences=False, activation='relu'))
@@ -28,7 +28,7 @@ model.add(Dense(2, activation='softmax'))
 model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
 # create empty training arrays
-train_in = np.empty([1, 1, 2])
+train_in = np.empty([1, 1, 3])
 train_out = np.empty([1, 2])
 
 for file in os.listdir(input_path):
@@ -41,9 +41,9 @@ for file in os.listdir(input_path):
         read_train_out = read_audio
 
         # read file
-        read_in = read_train_in.read_file(input_path + file)
-        read_out = read_train_out.read_file(expected_path + name_num)
-        read_in = read_in.reshape(read_train_in.get_length(), 1, 2)
+        read_in = read_train_in.get_data_fft(input_path + file)
+        read_out = read_train_out.get_real_imag(expected_path + name_num)
+        read_in = read_in.reshape(read_train_in.get_length(), 1, 3)
         if not train_in.size:
             train_in = read_in
             train_out = read_out
@@ -57,7 +57,7 @@ for file in os.listdir(input_path):
             raise
 
 # train the model
-model.fit(train_in, train_out, epochs=1, batch_size=200000)  # test with only 1 epoch
+model.fit(train_in, train_out, epochs=1, batch_size=300000)  # test with only 1 epoch
 
 # evaluate the model
 loss, accuracy = model.evaluate(train_in, train_out)

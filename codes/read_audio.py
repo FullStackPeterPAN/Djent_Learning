@@ -1,51 +1,48 @@
 import wave
 import numpy as np
+from scipy.io import wavfile
 
-num_frame = None
-num_channel = None
-frame_rate = None
-num_sample_width = None
+rate = None
 length = None
 
 
 # read input file
-def read_file(path):
-    input_file = wave.open(path, 'rb')
-    global num_frame
-    num_frame = input_file.getnframes()  # get the number of frames
-    global num_channel
-    num_channel = input_file.getnchannels()  # get the number of channels, only using mono audio in this program
-    global frame_rate
-    frame_rate = input_file.getframerate()  # get the rate of frames
-    global num_sample_width
-    num_sample_width = input_file.getsampwidth()  # get the width of sample
-    str_data = input_file.readframes(int(num_frame/frame_rate)*frame_rate)  # read frame_rate*n frames
-    input_file.close()  # close the file
-    wave_data = np.fromstring(str_data, np.int16)  # turn the data to numpy array
+def get_data(path):
+    global rate
+    rate, data = wavfile.read(path)
     global length
-    length = len(wave_data)
-    wave_fft = np.abs(np.fft.fft(wave_data[0: length]))
-    wave_data = wave_data.reshape(1, length)
-    wave_fft = wave_fft.reshape(1, length)
-    data_fft = np.concatenate((wave_data.T, wave_fft.T), axis=1)
+    length = int(len(data) / rate) * rate
+    data = data[0:length]  # fft can only read n*frame_rate
+    return data
+
+
+def get_fft(path):
+    data = get_data(path)
+    fft = (np.fft.fft(data))
+    return fft
+
+
+def get_real_imag(path):
+    fft = get_fft(path)
+    real = fft.real.reshape(1, get_length())  # reshape the real part of fft
+    imag = fft.imag.reshape(1, get_length())  # reshape the real part of fft
+    real_imag = np.concatenate((real.T, imag.T), axis=1)
+    return real_imag
+
+
+def get_data_fft(path):
+    data = get_data(path)
+    data = data.reshape(1, get_length())  # reshape the data array
+    fft = get_fft(path)
+    real = fft.real.reshape(1, get_length())  # reshape the real part of fft
+    imag = fft.imag.reshape(1, get_length())  # reshape the real part of fft
+    data_fft = np.concatenate((data.T, real.T, imag.T), axis=1)
     return data_fft
 
 
-def get_num_channel():
-    return num_channel
-
-
-def get_frame_rate():
-    return frame_rate
-
-
-def get_num_frame():
-    return num_frame
+def get_rate():
+    return rate
 
 
 def get_length():
     return length
-
-
-def get_sample_width():
-    return num_sample_width

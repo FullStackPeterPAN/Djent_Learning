@@ -1,11 +1,10 @@
 from keras.models import load_model
 from codes import read_audio
-import wave
-import struct
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 import errno
+from scipy.io import wavfile
 
 # input path
 input_path = "data/test/input/"
@@ -16,8 +15,8 @@ for file in os.listdir(input_path):
 
         # get input numpy array
         read_test_in = read_audio
-        test_in = read_test_in.read_file(input_path + file)
-        test_in = test_in.reshape(read_test_in.get_num_frame(), 1, 2)
+        test_in = read_test_in.get_data_fft(input_path + file)
+        test_in = test_in.reshape(read_test_in.get_length(), 1, 2)
 
         # load the model
         model_path = "data/model/model.h5"
@@ -25,26 +24,18 @@ for file in os.listdir(input_path):
 
         # predict the output
         test_out = model.predict(test_in)
+        test_out = np.fft.ifft(test_out)
         print(test_out)
+        np.savetxt(r'b', test_out)
+
         # open a wave file to be written
-        f = wave.open(r"data/test/output/test_out_" + name_num, "wb")
-
-        # set channel, sample width, frame rate, frame
-        f.setnchannels(read_test_in.get_num_channel())
-        f.setsampwidth(read_test_in.get_sample_width())
-        f.setframerate(read_test_in.get_frame_rate())
-        f.setnframes(read_test_in.get_num_frame())
-
-        # write file
-        for d in test_out:
-            f.writeframes(struct.pack('h', int(d * 64000 / 2)))  # for 16 bit
-        f.close()
+        wavfile.write(r"data/test/output/test_out_" + name_num, read_test_in.get_rate(), test_out)
 
         # plot the wave
-        time = np.arange(0, read_test_in.get_num_frame()) * (1.0 / read_test_in.get_frame_rate())
+        time = np.arange(0, read_test_in.get_length()) * (1.0 / read_test_in.get_rate())
         plt.figure()
-        for i in range(0, read_test_in.get_num_channel()):
-            plt.subplot(read_test_in.get_num_channel(), 1, i + 1)
+        for i in range(0, 1):
+            plt.subplot(1, 1, i + 1)
             plt.plot(time, test_out[:, i])
             plt.xlabel("Time(s)")
             plt.ylabel("Amplitude")

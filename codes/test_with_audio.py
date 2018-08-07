@@ -16,7 +16,7 @@ for file in os.listdir(input_path):
         # get input numpy array
         read_test_in = read_audio
         test_in = read_test_in.get_data_fft(input_path + file)
-        test_in = test_in.reshape(read_test_in.get_length(), 1, 2)
+        test_in = test_in.reshape(read_test_in.get_length(), 1, 3)
 
         # load the model
         model_path = "data/model/model.h5"

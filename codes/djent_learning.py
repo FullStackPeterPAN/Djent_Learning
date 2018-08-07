@@ -31,12 +31,13 @@ model.add(Dropout(0.5))
 model.add(Dense(2, activation='softmax'))
 
 # compile the model
-model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['mean_squared_error'])
 
 # create empty training arrays
 train_in = np.empty([1, 1, 3])
 train_out = np.empty([1, 2])
 
+# read all audio files to one array
 for file in os.listdir(input_path):
     try:
         # get the last number from file name

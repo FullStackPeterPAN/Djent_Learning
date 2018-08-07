@@ -15,21 +15,21 @@ model_path = "data/model/model.h5"
 model = Sequential()
 
 # input shape needs to be changed to 2 if using stereo audio
-model.add(LeakyReLU(alpha=0.01, input_shape=(1, 1)))
+model.add(LeakyReLU(alpha=0.01, input_shape=(1, 2)))
 model.add(LSTM(64, return_sequences=True, activation='relu'))
 model.add(Dropout(0.5))
 model.add(LSTM(128, return_sequences=False, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(128, activation='sigmoid'))
 model.add(Dropout(0.5))
-model.add(Dense(1, activation='softmax'))
+model.add(Dense(2, activation='softmax'))
 
 # compile the model
 model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
 # create empty training arrays
-train_in = np.empty([1, 1, 1])
-train_out= np.empty([1])
+train_in = np.empty([1, 1, 2])
+train_out = np.empty([1, 2])
 
 for file in os.listdir(input_path):
     try:
@@ -43,15 +43,13 @@ for file in os.listdir(input_path):
         # read file
         read_in = read_train_in.read_file(input_path + file)
         read_out = read_train_out.read_file(expected_path + name_num)
-        read_in = read_in.reshape(read_train_in.get_num_frame(), 1, 1)
+        read_in = read_in.reshape(read_train_in.get_length(), 1, 2)
         if not train_in.size:
             train_in = read_in
             train_out = read_out
         else:
             train_in = np.concatenate((train_in, read_in))
             train_out = np.concatenate((train_out, read_out))
-        print(train_out)
-        print(train_in)
 
     # catch errors
     except IOError as exc:

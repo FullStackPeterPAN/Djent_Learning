@@ -21,7 +21,7 @@ model.add(SimpleRNN(units=2, activation=None, return_sequences=False, return_sta
 model.add(LeakyReLU(alpha=0.01))
 model.add(Dropout(0.3))
 model.add(Dense(units=2))
-model.add(Activation('softmax'))
+
 
 optimizer = Adadelta()
 model.compile(loss='mse', optimizer=optimizer, metrics=['accuracy'])
@@ -44,7 +44,7 @@ for file in os.listdir(input_path):
         read_in = read_train_in.get_real_imag(input_path + file)
         read_out = read_train_out.get_real_imag(expected_path + name_num)
         read_in = read_in.reshape(read_train_in.get_length(), 1, 2)
-        if not train_in.size:
+        if not train_in.size:  # the first array
             train_in = read_in
             train_out = read_out
         else:
@@ -57,7 +57,7 @@ for file in os.listdir(input_path):
             raise
 
 # train the model
-model.fit(train_in, train_out, epochs=10, batch_size=44100)  # test with only 1 epoch
+model.fit(train_in, train_out, epochs=4, batch_size=44100)  # test with only 1 epoch
 
 # evaluate the model
 loss, accuracy = model.evaluate(train_in, train_out)

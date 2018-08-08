@@ -24,7 +24,7 @@ for file in os.listdir(input_path):
 
         # predict the output
         test_out = model.predict(test_in)
-        out_fft = test_out[:, 0] + 1j * test_out[:, 1]
+        out_fft = test_out[:, 0] + 1j * test_out[:, 1]  # transfer to fft again
         out_data = np.fft.ifft(out_fft)  # reverse fft
         out_data = out_data.astype('int16')  # transfer data to int16
         print(out_data)
@@ -33,8 +33,7 @@ for file in os.listdir(input_path):
         wavfile.write(r"data/test/output/test_out_" + name_num, read_test_in.get_rate(), out_data)
 
         # plot the wave
-        time = np.arange(0, read_test_in.get_length()) * (1.0 / read_test_in.get_rate())
-        plt.figure()
+        time = np.arange(0, read_test_in.get_length()) * (1.0 / read_test_in.get_rate())  # time length of the audio
         plt.plot(time, out_data)
         plt.xlabel("Time(s)")
         plt.ylabel("Amplitude")

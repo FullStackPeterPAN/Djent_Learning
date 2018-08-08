@@ -1,6 +1,6 @@
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, LeakyReLU, SimpleRNN
-from keras.optimizers import adagrad
+from keras.layers import Dense, Dropout, LeakyReLU, SimpleRNN, Activation
+from keras.optimizers import Adadelta
 from codes import read_audio
 import numpy as np
 import os
@@ -21,8 +21,9 @@ model.add(SimpleRNN(units=2, activation=None, return_sequences=False, return_sta
 model.add(LeakyReLU(alpha=0.01))
 model.add(Dropout(0.3))
 model.add(Dense(units=2))
+model.add(Activation('softmax'))
 
-optimizer = adagrad(clipvalue=1., lr=0.0001)
+optimizer = Adadelta()
 model.compile(loss='mse', optimizer=optimizer, metrics=['accuracy'])
 
 # create empty training arrays
@@ -56,7 +57,7 @@ for file in os.listdir(input_path):
             raise
 
 # train the model
-model.fit(train_in, train_out, epochs=5, batch_size=44100)  # test with only 1 epoch
+model.fit(train_in, train_out, epochs=10, batch_size=44100)  # test with only 1 epoch
 
 # evaluate the model
 loss, accuracy = model.evaluate(train_in, train_out)

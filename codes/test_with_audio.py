@@ -15,8 +15,8 @@ for file in os.listdir(input_path):
 
         # get input numpy array
         read_test_in = read_audio
-        test_in = read_test_in.get_data_fft(input_path + file)
-        test_in = test_in.reshape(read_test_in.get_length(), 1, 3)
+        test_in = read_test_in.get_real_imag(input_path + file)
+        test_in = test_in.reshape(read_test_in.get_length(), 1, 2)
 
         # load the model
         model_path = "data/model/model.h5"
@@ -26,9 +26,9 @@ for file in os.listdir(input_path):
         test_out = model.predict(test_in)
         out_fft = test_out[:, 0] + 1j * test_out[:, 1]
         out_data = np.fft.ifft(out_fft)  # reverse fft
+        print(out_data)
         out_data = out_data.astype('int16')  # transfer data to int16
         print(out_data)
-        np.savetxt(r'b', out_data)
 
         # write audio
         wavfile.write(r"data/test/output/test_out_" + name_num, read_test_in.get_rate(), out_data)
@@ -36,14 +36,12 @@ for file in os.listdir(input_path):
         # plot the wave
         time = np.arange(0, read_test_in.get_length()) * (1.0 / read_test_in.get_rate())
         plt.figure()
-        for i in range(0, 1):
-            plt.subplot(1, 1, i + 1)
-            plt.plot(time, test_out[:, i])
-            plt.xlabel("Time(s)")
-            plt.ylabel("Amplitude")
-            plt.title("show wave")
-            plt.grid('on')
-            plt.show()
+        plt.plot(time, out_data)
+        plt.xlabel("Time(s)")
+        plt.ylabel("Amplitude")
+        plt.title("show wave")
+        plt.grid('on')
+        plt.show()
 
     # catch errors
     except IOError as exc:

@@ -1,7 +1,6 @@
-from keras.models import Sequential, load_model
-from keras.layers.advanced_activations import LeakyReLU  # reduce zero output
-from keras.layers.core import Dense, Activation, Dropout
-from keras.layers import LSTM
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, LeakyReLU, SimpleRNN
+from keras.optimizers import adagrad
 from codes import read_audio
 import numpy as np
 import os
@@ -15,26 +14,19 @@ model_path = "data/model/model.h5"
 model = Sequential()
 
 # input shape needs to be changed to 2 if using stereo audio
-model.add(LeakyReLU(alpha=0.01, input_shape=(1, 3)))
-model.add(LSTM(64, return_sequences=True, activation='relu'))
-model.add(Dropout(0.5))
-model.add(LSTM(128, return_sequences=False, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(512, activation='sigmoid'))
-model.add(Dropout(0.5))
-model.add(Dense(512, activation='tanh'))
-model.add(Dropout(0.5))
-model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(2, activation='softmax'))
+model.add(SimpleRNN(units=2, input_shape=(1, 2), activation=None, return_sequences=True, return_state=False))
+model.add(LeakyReLU(alpha=0.01))
+model.add(Dropout(0.3))
+model.add(SimpleRNN(units=2, activation=None, return_sequences=False, return_state=False))
+model.add(LeakyReLU(alpha=0.01))
+model.add(Dropout(0.3))
+model.add(Dense(units=2))
 
-# compile the model
-model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['mean_squared_error'])
+optimizer = adagrad(clipvalue=1., lr=0.0001)
+model.compile(loss='mse', optimizer=optimizer, metrics=['accuracy'])
 
 # create empty training arrays
-train_in = np.empty([1, 1, 3])
+train_in = np.empty([1, 1, 2])
 train_out = np.empty([1, 2])
 
 # read all audio files to one array
@@ -48,9 +40,9 @@ for file in os.listdir(input_path):
         read_train_out = read_audio
 
         # read file
-        read_in = read_train_in.get_data_fft(input_path + file)
+        read_in = read_train_in.get_real_imag(input_path + file)
         read_out = read_train_out.get_real_imag(expected_path + name_num)
-        read_in = read_in.reshape(read_train_in.get_length(), 1, 3)
+        read_in = read_in.reshape(read_train_in.get_length(), 1, 2)
         if not train_in.size:
             train_in = read_in
             train_out = read_out
@@ -64,7 +56,7 @@ for file in os.listdir(input_path):
             raise
 
 # train the model
-model.fit(train_in, train_out, epochs=1, batch_size=300000)  # test with only 1 epoch
+model.fit(train_in, train_out, epochs=5, batch_size=44100)  # test with only 1 epoch
 
 # evaluate the model
 loss, accuracy = model.evaluate(train_in, train_out)

@@ -7,7 +7,7 @@ import os
 import errno
 
 # file path
-expected_path = "data/train/expected/tokyo_drive_"
+expected_path = "data/train/expected/shorten_drive_"
 input_path = "data/train/input/"
 model_path = "data/model/model.h5"
 
@@ -15,11 +15,11 @@ model_path = "data/model/model.h5"
 model = Sequential()
 
 # input shape needs to be changed to 2 if using stereo audio
-model.add(SimpleRNN(units=2, input_shape=(1, 2), activation=None, return_sequences=True, return_state=False))
+model.add(SimpleRNN(units=16, input_shape=(1, 2), activation=None, return_sequences=True, return_state=False))
 model.add(Dropout(0.1))
-model.add(SimpleRNN(units=2, activation=None, return_sequences=True, return_state=False))  # able to add more layers
+model.add(SimpleRNN(units=64, activation=None, return_sequences=True, return_state=False))  # able to add more layers
 model.add(Dropout(0.2))  # by repeating these two lines
-model.add(SimpleRNN(units=2, activation=None, return_sequences=False, return_state=False))
+model.add(SimpleRNN(units=16, activation=None, return_sequences=False, return_state=False))
 model.add(Dropout(0.3))
 model.add(Dense(units=2))
 

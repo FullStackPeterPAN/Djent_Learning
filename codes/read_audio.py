@@ -1,4 +1,3 @@
-import wave
 import numpy as np
 from scipy.io import wavfile
 import scipy.signal as signal
@@ -16,12 +15,6 @@ def get_data(path):
     return data
 
 
-def get_fft(path):
-    data = get_data(path)
-    fft = (np.fft.fft(data))
-    return fft
-
-
 def get_stft(path):
     data = get_data(path)
     f, t, stft = signal.stft(data, rate)
@@ -37,27 +30,5 @@ def stft_ri(path):
     return f, t, ri
 
 
-def get_real_imag(path):
-    fft = get_fft(path)
-    real = fft.real.reshape(1, get_length())  # reshape the real part of fft
-    imag = fft.imag.reshape(1, get_length())  # reshape the imaginary part of fft
-    real_imag = np.concatenate((real.T, imag.T), axis=1)
-    return real_imag
-
-
-def get_data_fft(path):
-    data = get_data(path)
-    data = data.reshape(1, get_length())  # reshape the data array
-    fft = get_fft(path)
-    real = fft.real.reshape(1, get_length())  # reshape the real part of fft
-    imag = fft.imag.reshape(1, get_length())  # reshape the imaginary part of fft
-    data_fft = np.concatenate((data.T, real.T, imag.T), axis=1)
-    return data_fft
-
-
 def get_rate():
     return rate
-
-
-def get_length():
-    return length

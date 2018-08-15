@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, LeakyReLU, SimpleRNN, LSTM, Activation
+from keras.layers import Dense, Dropout, LeakyReLU, LSTM
 from keras.optimizers import Adadelta
 from keras.callbacks import ModelCheckpoint
 from codes import read_audio
@@ -20,6 +20,8 @@ model = Sequential()
 # input shape needs to be changed to 2 if using stereo audio
 model.add(LSTM(1024, return_sequences=True, input_shape=(1, 258)))
 model.add(LeakyReLU())
+model.add(Dropout(0.2))
+model.add(LSTM(1024, return_sequences=True))
 model.add(Dropout(0.2))
 model.add(LSTM(1024, return_sequences=False))
 model.add(LeakyReLU())
@@ -107,7 +109,8 @@ for j in range(1, count+1):
     callback_list = [checkpoint]  # only save the best model
 
     # fit the model
-    model.fit(x=train_x, y=train_y, validation_split=0.33, batch_size=1000, epochs=5, callbacks=callback_list, verbose=1)
+    model.fit(x=train_x, y=train_y, validation_split=0.33,
+              batch_size=1000, epochs=5, callbacks=callback_list, verbose=1)
 
     # evaluate the model
     loss, accuracy = model.evaluate(train_x, train_y, verbose=1)

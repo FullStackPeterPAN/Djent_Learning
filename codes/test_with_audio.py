@@ -1,10 +1,12 @@
 from keras.models import load_model
 from codes import read_audio
 import numpy as np
+from numpy import newaxis
 import matplotlib.pyplot as plt
 import os
 import errno
 from scipy.io import wavfile
+from scipy import signal
 
 # input path
 input_path = "data/test/input/"
@@ -15,8 +17,8 @@ for file in os.listdir(input_path):
 
         # get input numpy array
         read_test_in = read_audio
-        test_in = read_test_in.get_real_imag(input_path + file)
-        test_in = test_in.reshape(read_test_in.get_length(), 1, 2)
+        _, _, test_in = read_test_in.stft_ri(input_path + file)
+        test_in = test_in[:, newaxis, :]
 
         # load the model
         model_path = "data/model/rnn_model.h5"
@@ -29,8 +31,10 @@ for file in os.listdir(input_path):
 
         # predict the output
         test_out = model.predict(test_in)
-        out_fft = test_out[:, 0] + 1j * test_out[:, 1]  # transfer to fft again
-        out_data = np.fft.ifft(out_fft).real  # reverse fft
+        out1, out2 = np.split(test_out.T, 2, axis=0)  # split output to real and imaginary
+        out_stft = out1 + 1j * out2  # transfer to stft again
+        _, d = signal.istft(out_stft, read_test_in.get_rate())
+        out_data = d.astype('int16')
         print(out_data)
         out_data = out_data.astype('int16')  # transfer data to int16
 
@@ -38,7 +42,7 @@ for file in os.listdir(input_path):
         wavfile.write(r"data/test/output/test_out_" + name_num, read_test_in.get_rate(), out_data)
 
         # plot the wave
-        time = np.arange(0, read_test_in.get_length()) * (1.0 / read_test_in.get_rate())  # time length of the audio
+        time = np.arange(0, len(out_data)) * (1.0 / read_test_in.get_rate())  # time length of the audio
         plt.plot(time, out_data)
         plt.xlabel("Time(s)")
         plt.ylabel("Amplitude")

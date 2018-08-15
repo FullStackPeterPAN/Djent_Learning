@@ -1,7 +1,7 @@
 import wave
 import numpy as np
 from scipy.io import wavfile
-
+import scipy.signal as signal
 rate = None
 length = None
 
@@ -20,6 +20,21 @@ def get_fft(path):
     data = get_data(path)
     fft = (np.fft.fft(data))
     return fft
+
+
+def get_stft(path):
+    data = get_data(path)
+    f, t, stft = signal.stft(data, rate)
+    stft = stft.T
+    return f, t, stft
+
+
+def stft_ri(path):
+    f, t, stft = get_stft(path)
+    real = stft.real
+    imag = stft.imag
+    ri = np.concatenate((real, imag), axis=1)
+    return f, t, ri
 
 
 def get_real_imag(path):

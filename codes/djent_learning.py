@@ -9,10 +9,10 @@ import os
 import errno
 
 # file path
-expected_path = "data/train/expected/test_drive_"
+expected_path = "data/train/expected/shorten_metal_"
 input_path = "data/train/input/"
-model_path = "data/model/rnn_model.h5"
-weight_path = "data/model/weights.best.hdf5"
+model_path = "data/model/rnn_metal_model.h5"
+weight_path = "data/model/weights_metal.best.hdf5"
 
 # activate a new model
 model = Sequential()
@@ -110,7 +110,7 @@ for j in range(1, count+1):
 
     # fit the model
     model.fit(x=train_x, y=train_y, validation_split=0.33,
-              batch_size=1000, epochs=5, callbacks=callback_list, verbose=1)
+              batch_size=2000, epochs=2000, callbacks=callback_list, verbose=1)
 
     # evaluate the model
     loss, accuracy = model.evaluate(train_x, train_y, verbose=1)

@@ -17,7 +17,7 @@ def get_data(path):
 
 def get_stft(path):
     data = get_data(path)
-    f, t, stft = signal.stft(data, rate)
+    f, t, stft = signal.stft(data, rate, nperseg=440)
     stft = stft.T
     return f, t, stft
 

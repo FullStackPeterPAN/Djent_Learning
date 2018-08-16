@@ -9,24 +9,25 @@ import os
 import errno
 
 # file path
-expected_path = "data/train/expected/shorten_metal_"
+expected_path = "data/train/expected/shorten_drive_"
 input_path = "data/train/input/"
-model_path = "data/model/rnn_metal_model.h5"
-weight_path = "data/model/weights_metal.best.hdf5"
+model_path = "data/model/rnn_drive_model.h5"
+weight_path = "data/model/weights_drive.best.hdf5"
 
 # activate a new model
 model = Sequential()
 
-# input shape needs to be changed to 2 if using stereo audio
-model.add(LSTM(1024, return_sequences=True, input_shape=(1, 258)))
+# input shape needs to be changed to (2, ) if using stereo audio
+model.add(LSTM(512, return_sequences=True, input_shape=(1, 442)))  # nperseg of stft + 2
 model.add(LeakyReLU())
 model.add(Dropout(0.2))
-model.add(LSTM(1024, return_sequences=True))
-model.add(Dropout(0.2))
-model.add(LSTM(1024, return_sequences=False))
+model.add(LSTM(512, return_sequences=True))
 model.add(LeakyReLU())
 model.add(Dropout(0.2))
-model.add(Dense(258))
+model.add(LSTM(512, return_sequences=False))
+model.add(LeakyReLU())
+model.add(Dropout(0.2))
+model.add(Dense(442))  # nperseg of stft + 2
 
 
 ''' Model 1
@@ -54,8 +55,8 @@ def data_generator(data, targets, batch_size):
 # training method
 def array(path):
     # create empty training arrays
-    train_in = np.empty([1, 1, 258])
-    train_out = np.empty([1, 258])
+    train_in = np.empty([1, 1, 442])  # nperseg of stft + 2
+    train_out = np.empty([1, 442])  # nperseg of stft + 2
 
     # read all audio files to one array
     for file in os.listdir(path):
@@ -91,7 +92,7 @@ for folder in os.listdir(input_path):
     count = count + 1
 
 # processing
-for j in range(1, count+1):
+for j in range(3, count+1):
 
     f = input_path + "clean" + str(j) + "/"  # folder path
     train_x, train_y = array(f)
@@ -110,7 +111,7 @@ for j in range(1, count+1):
 
     # fit the model
     model.fit(x=train_x, y=train_y, validation_split=0.33,
-              batch_size=2000, epochs=2000, callbacks=callback_list, verbose=1)
+              batch_size=500, epochs=5, callbacks=callback_list, verbose=1)
 
     # evaluate the model
     loss, accuracy = model.evaluate(train_x, train_y, verbose=1)

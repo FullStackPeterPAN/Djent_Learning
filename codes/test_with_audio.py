@@ -21,8 +21,8 @@ for file in os.listdir(input_path):
         test_in = test_in[:, newaxis, :]
 
         # load the model
-        model_path = "data/model/rnn_metal_model.h5"
-        weight_path = "data/model/weights_metal.best.hdf5"
+        model_path = "data/model/rnn_drive_model.h5"
+        weight_path = "data/model/weights_drive.best.hdf5"
         model = load_model(model_path)
 
         # if exist load weights

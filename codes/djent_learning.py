@@ -111,7 +111,7 @@ for j in range(3, count+1):
 
     # fit the model
     model.fit(x=train_x, y=train_y, validation_split=0.33,
-              batch_size=500, epochs=5, callbacks=callback_list, verbose=1)
+              batch_size=500, epochs=8, callbacks=callback_list, verbose=1)
 
     # evaluate the model
     loss, accuracy = model.evaluate(train_x, train_y, verbose=1)

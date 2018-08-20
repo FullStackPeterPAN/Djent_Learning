@@ -7,7 +7,9 @@ import numpy as np
 from numpy import newaxis
 import os
 import errno
+from codes.read_audio import npers
 
+dim = npers + 1002  # nperseg of stft + 2
 # file path
 expected_path = "data/train/expected/shorten_drive_"
 input_path = "data/train/input/"
@@ -18,16 +20,16 @@ weight_path = "data/model/weights_drive.best.hdf5"
 model = Sequential()
 
 # input shape needs to be changed to (2, ) if using stereo audio
-model.add(LSTM(512, return_sequences=True, input_shape=(1, 442)))  # nperseg of stft + 2
+model.add(LSTM(128, return_sequences=True, input_shape=(1, dim)))
 model.add(LeakyReLU())
 model.add(Dropout(0.2))
-model.add(LSTM(512, return_sequences=True))
+model.add(LSTM(64, return_sequences=True))
 model.add(LeakyReLU())
 model.add(Dropout(0.2))
-model.add(LSTM(512, return_sequences=False))
+model.add(LSTM(32, return_sequences=False))
 model.add(LeakyReLU())
 model.add(Dropout(0.2))
-model.add(Dense(442))  # nperseg of stft + 2
+model.add(Dense(dim))
 
 
 ''' Model 1
@@ -55,8 +57,8 @@ def data_generator(data, targets, batch_size):
 # training method
 def array(path):
     # create empty training arrays
-    train_in = np.empty([1, 1, 442])  # nperseg of stft + 2
-    train_out = np.empty([1, 442])  # nperseg of stft + 2
+    train_in = np.empty([1, 1, dim])
+    train_out = np.empty([1, dim])
 
     # read all audio files to one array
     for file in os.listdir(path):
@@ -92,7 +94,7 @@ for folder in os.listdir(input_path):
     count = count + 1
 
 # processing
-for j in range(3, count+1):
+for j in range(1, count+1):
 
     f = input_path + "clean" + str(j) + "/"  # folder path
     train_x, train_y = array(f)
@@ -110,8 +112,8 @@ for j in range(3, count+1):
     callback_list = [checkpoint]  # only save the best model
 
     # fit the model
-    model.fit(x=train_x, y=train_y, validation_split=0.33,
-              batch_size=500, epochs=8, callbacks=callback_list, verbose=1)
+    model.fit(x=train_x, y=train_y, validation_split=0.3,
+              batch_size=500, epochs=600, callbacks=callback_list, verbose=1)
 
     # evaluate the model
     loss, accuracy = model.evaluate(train_x, train_y, verbose=1)

@@ -7,6 +7,7 @@ import os
 import errno
 from scipy.io import wavfile
 from scipy import signal
+from codes.read_audio import npers
 
 # input path
 input_path = "data/test/input/"
@@ -33,7 +34,7 @@ for file in os.listdir(input_path):
         test_out = model.predict(test_in)
         out1, out2 = np.split(test_out.T, 2, axis=0)  # split output to real and imaginary
         out_stft = out1 + 1j * out2  # transfer to stft again
-        _, d = signal.istft(out_stft, read_test_in.get_rate())
+        _, d = signal.istft(out_stft, read_test_in.get_rate(), nperseg=npers)
         out_data = d.astype('int16')
         print(out_data)
         out_data = out_data.astype('int16')  # transfer data to int16

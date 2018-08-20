@@ -3,7 +3,8 @@ from scipy.io import wavfile
 import scipy.signal as signal
 rate = None
 length = None
-
+global npers
+npers = 1000
 
 # read input file
 def get_data(path):
@@ -17,7 +18,7 @@ def get_data(path):
 
 def get_stft(path):
     data = get_data(path)
-    f, t, stft = signal.stft(data, rate, nperseg=440)
+    f, t, stft = signal.stft(data, rate, nperseg=npers)
     stft = stft.T
     return f, t, stft
 

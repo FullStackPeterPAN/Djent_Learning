@@ -4,7 +4,8 @@ import scipy.signal as signal
 rate = None
 length = None
 global npers
-npers = 1000
+npers = 2000
+
 
 # read input file
 def get_data(path):

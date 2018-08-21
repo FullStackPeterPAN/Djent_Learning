@@ -22,8 +22,8 @@ for file in os.listdir(input_path):
         test_in = test_in[:, newaxis, :]
 
         # load the model
-        model_path = "data/model/rnn_drive_model.h5"
-        weight_path = "data/model/weights_drive.best.hdf5"
+        model_path = "data/model/lstm_djent_model.h5"
+        weight_path = "data/model/weights_djent.best.hdf5"
         model = load_model(model_path)
 
         # if exist load weights
@@ -34,7 +34,7 @@ for file in os.listdir(input_path):
         test_out = model.predict(test_in)
         out1, out2 = np.split(test_out.T, 2, axis=0)  # split output to real and imaginary
         out_stft = out1 + 1j * out2  # transfer to stft again
-        _, d = signal.istft(out_stft, read_test_in.get_rate(), nperseg=npers)
+        _, d = signal.istft(out_stft, read_test_in.get_rate(),nperseg=npers)
         out_data = d.astype('int16')
         print(out_data)
         out_data = out_data.astype('int16')  # transfer data to int16

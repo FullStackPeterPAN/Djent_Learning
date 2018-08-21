@@ -6,7 +6,7 @@ from codes import read_audio
 import numpy as np
 from numpy import newaxis
 import os
-import random
+import gc
 import errno
 from codes.read_audio import npers
 
@@ -103,8 +103,7 @@ for folder in os.listdir(input_path):
     count = count + 1
 
 # processing
-for j in range(6, count+1):
-
+for j in range(1, count+1):
     f = input_path + "clean" + str(j) + "/"  # folder path
     train_x, train_y = array(f)
 
@@ -131,3 +130,6 @@ for j in range(6, count+1):
     # save the model
     if loss!='nan':
         model.save(model_path)
+
+    # clean memory for next folder
+    print(gc.collect())

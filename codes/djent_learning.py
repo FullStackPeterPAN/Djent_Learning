@@ -4,7 +4,7 @@ from keras.optimizers import Adadelta
 from keras.callbacks import ModelCheckpoint
 from codes import read_audio as ra
 from codes.read_audio import npers
-import numpy  as np
+import numpy as np
 import os
 import gc
 
@@ -58,8 +58,9 @@ for epoch in range(0, 100):  # adjust the size of epochs
     for i in range(0, 12):
 
         # mix files for reducing nan
+        # read one different file each time
         train_x, train_y = ra.array(i)
-        for j in range(1, 5):
+        for j in range(1, 5):  # concatenate separately to avoid memory error
             n = i + j
             if (i+j) > 13:  # for the last few files
                 n = n - 14

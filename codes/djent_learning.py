@@ -4,6 +4,7 @@ from keras.optimizers import Adadelta
 from keras.callbacks import ModelCheckpoint
 from codes import read_audio as ra
 from codes.read_audio import npers
+import numpy  as np
 import os
 import gc
 
@@ -52,9 +53,19 @@ def data_generator(data, targets, batch_size):
             yield (x, y)
 '''
 for epoch in range(0, 100):  # adjust the size of epochs
-    for file in os.listdir(input_path):
-        # training method
-        train_x, train_y = ra.array(input_path + file, file)
+
+    # training method
+    for i in range(0, 12):
+
+        # mix files for reducing nan
+        train_x, train_y = ra.array(i)
+        for j in range(1, 5):
+            n = i + j
+            if (i+j) > 13:  # for the last few files
+                n = n - 14
+            x, y = ra.array(n)
+            train_x = np.concatenate((train_x, x))
+            train_y = np.concatenate((train_y, y))
 
         # if exist load weights
         if os.path.exists(weight_path):

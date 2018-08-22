@@ -44,7 +44,7 @@ def stft_ri(path):
 
 
 # transfer to array for training
-def array(path, file):
+def array(num):
     dim = npers + 2
     # create empty training arrays
     train_in = np.empty([1, 1, dim])
@@ -52,12 +52,10 @@ def array(path, file):
 
     # read all audio files to one array
     try:
-        # get the last number from file name
-        name_num = file.split("_")[-1]
 
         # read file
-        read_in_stft = stft_ri(path)
-        read_out_stft = stft_ri(expected_path + str(name_num))
+        read_in_stft = stft_ri(input_path + "new_clean_" + str(num) + ".wav")
+        read_out_stft = stft_ri(expected_path + str(num)+".wav")
 
         # shuffle before process
         index = np.arange(len(read_in_stft))

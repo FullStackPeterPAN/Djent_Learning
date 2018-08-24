@@ -17,7 +17,7 @@ for file in os.listdir(input_path):
         name_num = file.split("_")[-1]
 
         # get input numpy array
-        _, _, test_in = ra.stft_ri(input_path + file)
+        test_in = ra.stft_ri(input_path + file)
         test_in = test_in[:, newaxis, :]
 
         # load the model

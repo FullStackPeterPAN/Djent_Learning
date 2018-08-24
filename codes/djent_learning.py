@@ -55,18 +55,19 @@ def data_generator(data, targets, batch_size):
 for epoch in range(0, 100):  # adjust the size of epochs
 
     # training method
-    for i in range(0, 12):
+    for i in range(0, 12):  # 0 can be changed to the file wanted to be started
 
         # mix files for reducing nan
         # read one different file each time
         train_x, train_y = ra.array(i)
-        for j in range(1, 5):  # concatenate separately to avoid memory error
+        for j in range(1, 3):  # concatenate separately to avoid memory error
             n = i + j
             if (i+j) > 13:  # for the last few files
                 n = n - 14
             x, y = ra.array(n)
             train_x = np.concatenate((train_x, x))
             train_y = np.concatenate((train_y, y))
+            del x, y  # clean memory
 
         # if exist load weights
         if os.path.exists(weight_path):
@@ -81,7 +82,8 @@ for epoch in range(0, 100):  # adjust the size of epochs
         callback_list = [checkpoint]  # only save the best model
 
         # fit the model
-        model.fit(x=train_x, y=train_y, validation_split=0.05, batch_size=1000, epochs=1, callbacks=callback_list, verbose=1)
+        model.fit(x=train_x, y=train_y, validation_split=0.05, batch_size=1000, epochs=10,
+                  callbacks=callback_list, verbose=1, shuffle=True)
 
         # evaluate the model
         loss, accuracy = model.evaluate(train_x, train_y, verbose=1)
